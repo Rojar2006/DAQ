@@ -194,7 +194,7 @@ A ripple voltage of 20mV is acceptable on the ADC input lines. Since ripple curr
 **ADS1115: Analog-to-Digital Converter**
 The ADS1115 can perform conversions at data rates of upto 860 samples per second. It also has an input multiplexer for differential or single ended input. It features a Programmable Gain Amplifier (PGA), enabling accurate small and large signal measurements. It is a 16-bit delta-sigma converter with an I2C interface.
 
-![***Fig 1***](attachment:d4835a5e-9214-432f-8d2a-bc29e4ba9f72:Screenshot_2026-05-07_at_8.57.38_PM.png)
+
 
 ***Fig 1***
 
