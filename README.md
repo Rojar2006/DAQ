@@ -268,6 +268,45 @@ Whether the digital comparator is operated in mode 1 or mode 2, it can be config
 
 **Queue system**
 
-The ALERT pin can also be configured to activate after a set number of successive readings exceed the Hi_thresh or Lo_thresh, to make sure that there are no false alarms due to noise. 
+The ALERT pin can also be configured to activate after a set number of successive readings exceed the Hi_thresh or Lo_thresh, to make sure that there are no false alarms due to noise. The COMP_QUE[1:0] bits decide if the ALERT pin should be active after 1,2 or 4 conversions beyond the threshold.
 
-The ALERT/READY pin has another function as evident from the name. It can also be configured to be a **conversion ready pin**.
+The ALERT/READY pin has another function as evident from the name. It can also be configured to be a **conversion ready pin**. When the ADC is operated in this mode the internal digital comparator is temporarily disabled. The ALERT/READY pin can be configured as a conversion ready pin by setting the MSB of Hi_thresh and Lo_thresh as 1b and 0b respectively.
+
+**NOTE**: The ADS1115 is reset on power up which makes the bits in the config register to reset back to default settings. A start up function has to be defined in the software, to set the bits to match the required functions.
+
+
+**Programming(I2C Interface)**
+The ADS1115 communicates via the I2C interface. It is a two line, open-drain interface that supports multiple devices and controllers. Due to the open-drain interface, there is no possibility of bus conflict. Communication takes place between two devices. One device is designated as the controller and the other as the target. I2C supports half-duplex communication, so one device can transmit or receive at a time. 
+
+Controller:
+
+- generates the clock signal on the SCL pin.
+- Initiates communication.
+- Issues START and STOP conditions.
+- Decides whether to read or write.
+
+Target:
+
+- Responds when addressed.
+- Follows the clock signal.
+- Transfers data only when requested.
+
+So both controller and target can receive or transfer data at a time. The ADDR pin on the ADS1115 handles the I2C addressing. There are 4 possible addresses by connecting the ADDR pin to Vcc, GND, SDA,SCL. So 4 of these ADCs can be used on the same bus.
+
+### I2C lines: SDA and SCL
+
+SDA - Serial Data
+
+SCL - Serial clock
+
+SCL is the clock signal provided to the target devices. SDA is the bidirectional data bus. All data is transmitted through the I2C bus in groups of 8 bits. To send data over the SDA, drive the line appropriate level when SCL is low, then SCL goes high and again low. This pushes the bit into internal receiver shift register of the target register. All data is transmitted when the clock is low.
+
+If the data bus changes when clock is high it is wither a START or STOP condition.
+
+SDA 1 to 0 when clock is 1 - START  condition
+
+SDA 0 to 1 when clock is 1 - STOP condition
+
+After START condition the controller sends a byte that indicates which target device to communicate with. A bit is also sent with this ‘address’ byte to indicate if the controller wants to read or write.
+
+Every data sent over the I2C bus is followed by an acknowledge bit from the device(controller or target) that received the data. When the controller finishes sending a byte, ti stops driving the SDA line and waits for acknowledging bit from the target. The target acknowledges the byte by pulling the SDA pin low. The controller sends a clock pulse to clock the bit. Similarly when a controller finishes reading data, it pulls the SDA pin low, and sends a clock pulse to clock the acknowledge bit. Controller always drives the clock.
