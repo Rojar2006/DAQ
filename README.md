@@ -22,17 +22,9 @@ A custom-designed 16-bit 8-channel industrial Data Acquisition (DAQ) board for i
 
 # System Architecture
 
-4–20mA Sensors
-        ↓
-Protection + RC Filtering
-        ↓
-ADS1115 ADCs
-        ↓
-STM32 Microcontroller
-        ↓
-RS485 Transceiver
-        ↓
-RJ45 Interface
+```text
+4–20mA Sensors → Protection + RC Filtering → ADS1115 ADCs → STM32 Microcontroller → RS485 Transceiver → RJ45 Interface
+```
 
 ---
 
@@ -117,4 +109,3 @@ This project emphasized:
 
 ---
 
-Detailed engineering notes, calculations, and design discussions are maintained separately as part of the project documentation.
